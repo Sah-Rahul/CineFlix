@@ -29,6 +29,16 @@ export default function TabLayout() {
           ),
         }}
       />
+
+       <Tabs.Screen
+        name="contact"
+        options={{
+          title: "contact",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="compass" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
