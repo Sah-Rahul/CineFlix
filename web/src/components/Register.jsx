@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { USER_API_ENDPOINT } from "../utils/constant";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -47,15 +51,32 @@ const Register = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
 
+    const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log("Form Data:", formData);
-      //  API call
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${USER_API_ENDPOINT}/register`,
+        formData,
+        { withCredentials: true }
+      );
+
+      toast.success("Registered successfully!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration Error:", error);
+
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -138,7 +159,7 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-white hover:underline font-semibold"
+              className="text-blue-600 hover:underline font-semibold"
             >
               Log In
             </Link>

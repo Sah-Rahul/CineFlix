@@ -1,7 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { USER_API_ENDPOINT } from "../utils/constant";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, setLoading } from "../store/slices/userSlice";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const loading = useSelector((state) => state.user.loading);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,15 +51,37 @@ const Login = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log("Form Data:", formData);
-      //  API call
+      return;
+    }
+
+    dispatch(setLoading(true));
+
+    try {
+      const { data } = await axios.post(
+        `${USER_API_ENDPOINT}/login`,
+        formData,
+        { withCredentials: true }
+      );
+
+      dispatch(setUser(data.user));
+      toast.success(`Welcome back ${data.user.fullName}`);
+      navigate("/");
+    } catch (error) {
+      console.error("Login Error:", error);
+
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -103,9 +136,10 @@ const Login = () => {
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-red-600 cursor-pointer text-white py-3 rounded font-semibold hover:bg-red-700 transition"
+            className="w-full flex justify-center items-center bg-red-600 cursor-pointer text-white py-3 rounded font-semibold hover:bg-red-700 transition"
+            disabled={loading}
           >
-            Log In
+            {loading ? <Loader2 className="animate-spin h-5 w-5" /> : "Log In"}
           </button>
         </div>
 
@@ -114,7 +148,7 @@ const Login = () => {
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="text-white hover:underline font-semibold"
+              className="text-blue-600 hover:underline font-semibold"
             >
               Sign Up
             </Link>
@@ -126,7 +160,6 @@ const Login = () => {
           <a href="#" className="text-blue-500 hover:underline">
             Learn more
           </a>
-          .
         </p>
       </div>
     </div>

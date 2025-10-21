@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import NavBar from "./NavBar";
 
 const Home = () => {
@@ -8,11 +7,11 @@ const Home = () => {
   const movies = [
     {
       id: 1,
-      title: "Oppenheimer",
+      title: "Avengers Endgame",
       description:
-        "The story of J. Robert Oppenheimer's role in the development of the atomic bomb during World War II.",
+        "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe.",
       image:
-        "https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg",
+        "https://rare-gallery.com/mocahbig/74072-AvengersAvengers-Endgame-4k-Ultra-HD-Wallpaper.jpg",
     },
     {
       id: 2,
