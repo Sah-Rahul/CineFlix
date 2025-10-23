@@ -7,6 +7,7 @@ import ConnectDb from "./src/config/db.js";
 // imported routes 
 
 import userRouter from "./src/routes/user.routes.js"
+import videoRouter from "./src/routes/video.routes.js";
 
 
 
@@ -28,6 +29,8 @@ app.use(
 );
 
 app.use('/api/v1/auth', userRouter) 
+app.use('/api/v1/video', videoRouter)
+
 
 app.get("/", (req, res) => {
   res.send("server is running ✅ ...");
