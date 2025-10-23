@@ -11,8 +11,8 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="border-b w-100vw border-gray-200  p-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="border w-100vw border-gray-200  p-4">
+      <div className="max-w-2xl   mx-auto">
         <div className="flex border-b border-gray-200 mb-3">
           <button className="flex-1 text-center py-2 font-semibold text-blue-500 border-b-2 border-blue-500">
             For you
@@ -45,7 +45,7 @@ const CreatePost = () => {
 
               <button
                 onClick={handlePost}
-                className="bg-blue-500 text-white font-semibold px-4 py-1.5 rounded-full hover:bg-blue-600 transition disabled:opacity-50"
+                className="bg-blue-500 cursor-pointer text-white font-semibold px-4 py-1.5 rounded-full hover:bg-blue-600 transition disabled:opacity-50"
                 disabled={!text.trim()}
               >
                 Post

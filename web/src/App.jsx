@@ -1,12 +1,12 @@
-import React from "react";
-import Home from "./components/Home";
+import React from 'react'
+import AppRoute from './Route/AppRoute'
 
 const App = () => {
   return (
-    <>
-      <Home />
-    </>
-  );
-};
+    <div>
+      <AppRoute />
+    </div>
+  )
+}
 
-export default App;
+export default App

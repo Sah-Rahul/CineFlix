@@ -4,11 +4,10 @@ import Tweet from "./Tweet";
 
 const Feed = () => {
   return (
-    <div className="flex-1 border-x border-gray-200 min-h-screen bg-white">
+    <div className="  w-full">
       <CreatePost />
-      <Tweet />
-       <Tweet />
-        <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet />
+      <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet />{" "}
+      <Tweet /> <Tweet /> <Tweet />
     </div>
   );
 };
