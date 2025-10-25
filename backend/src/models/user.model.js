@@ -23,6 +23,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    followers: {
+      type: Array,
+      default: [],
+    },
+    following: {
+      type: Array,
+      default: [],
+    },
+    bookmarks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tweet",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

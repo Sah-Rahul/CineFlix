@@ -7,6 +7,7 @@ import ConnectDb from "./src/config/db.js";
 // imported routes
 
 import userRouter from "./src/routes/user.routes.js";
+import tweetRouter from "./src/routes/tweet.routes.js";
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use(
 );
 
 app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/tweet", tweetRouter);
 
 app.get("/", (req, res) => {
   res.send("server is running ✅ ...");

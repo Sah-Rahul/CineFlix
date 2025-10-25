@@ -7,25 +7,31 @@ const tweetSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    like: {
-      type: Array,
-      default: [],
-    },
-    bookmarks: {
-      type: Array,
-      default: [],
-    },
-    userId: {
+    like: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
+    dislike: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
+    bookmarks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
+    userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-    },
-    follwers: {
-      type: Array,
-      default: [],
-    },
-    following: {
-      type: Array,
-      default: [],
+      required: true,
     },
   },
   {
@@ -33,4 +39,4 @@ const tweetSchema = new mongoose.Schema(
   }
 );
 
-export const tweetModel = mongoose.model("User", tweetSchema);
+export const tweetModel = mongoose.model("Tweet", tweetSchema);
