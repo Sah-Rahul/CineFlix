@@ -4,13 +4,9 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import ConnectDb from "./src/config/db.js";
 
-// imported routes 
+// imported routes
 
-import userRouter from "./src/routes/user.routes.js"
-import videoRouter from "./src/routes/video.routes.js";
-
-
-
+import userRouter from "./src/routes/user.routes.js";
 
 dotenv.config();
 const app = express();
@@ -28,15 +24,13 @@ app.use(
   })
 );
 
-app.use('/api/v1/auth', userRouter) 
-app.use('/api/v1/video', videoRouter)
-
+app.use("/api/v1/auth", userRouter);
 
 app.get("/", (req, res) => {
   res.send("server is running ✅ ...");
 });
 
 app.listen(port, () => {
-  ConnectDb()
+  ConnectDb();
   console.log(`server is running on http://localhost:${port}`);
 });

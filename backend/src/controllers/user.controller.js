@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullname,username, email, password } = req.body;
 
-    if (!fullName || !email || !password) {
+    if (!fullname || !username || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -18,7 +18,8 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await userModel.create({
-      fullName,
+      fullname,
+      username,
       email,
       password: hashedPassword,
     });
@@ -27,7 +28,8 @@ export const register = async (req, res) => {
       message: "User registered successfully",
       user: {
         id: newUser._id,
-        fullName: newUser.fullName,
+        fullName: newUser.fullname,
+        username: newUser.username,
         email: newUser.email,
       },
     });
@@ -69,10 +71,10 @@ export const login = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "Login successful",
+      message: `Welcome back ${user.fullname}`,
       user: {
         id: user._id,
-        fullName: user.fullName,
+        fullName: user.fullname,
         email: user.email,
       },
     });
