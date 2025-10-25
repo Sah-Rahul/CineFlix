@@ -14,10 +14,10 @@ const CreatePost = () => {
     <div className="border w-100vw border-gray-200  p-4">
       <div className="max-w-2xl   mx-auto">
         <div className="flex border-b border-gray-200 mb-3">
-          <button className="flex-1 text-center py-2 font-semibold text-blue-500 border-b-2 border-blue-500">
+          <button className="flex-1 text-center hover:bg-gray-100/80 cursor-pointer py-2 font-semibold text-blue-500 border-b-2 border-blue-500">
             For you
           </button>
-          <button className="flex-1 text-center py-2 text-gray-500 hover:text-blue-500 transition">
+          <button className="flex-1 text-center hover:bg-gray-100/80 cursor-pointer py-2 text-gray-500 hover:text-blue-500 transition">
             Following
           </button>
         </div>

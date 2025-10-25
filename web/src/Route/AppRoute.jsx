@@ -59,15 +59,3 @@ function AppRoute() {
 }
 
 export default AppRoute;
-
-{
-  /* <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/bookmarks" element={<Bookmarks />} />
-      </Routes>
-    </BrowserRouter> */
-}

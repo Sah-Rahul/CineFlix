@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { USER_API_POINT } from "../utils/constant";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -23,10 +28,16 @@ const Signup = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (formData.name.length < 3) {
-      newErrors.name = "Name must be at least 3 characters";
+    if (!formData.fullname.trim()) {
+      newErrors.fullname = "Full name is required";
+    } else if (formData.fullname.length < 3) {
+      newErrors.fullname = "Full name must be at least 3 characters";
+    }
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
     }
 
     if (!formData.email.trim()) {
@@ -44,7 +55,7 @@ const Signup = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = validateForm();
@@ -53,9 +64,19 @@ const Signup = () => {
       return;
     }
 
-    console.log("✅ Form Submitted:", formData);
-    alert("Signup successful!");
-    setFormData({ name: "", email: "", password: "" });
+    try {
+      const { data } = await axios.post(
+        `${USER_API_POINT}/register`,
+        formData,
+        { withCredentials: true }
+      );
+
+      toast.success("User signup successful!");
+      navigate("/login");
+    } catch (error) {
+      console.error("Signup Error:", error);
+      toast.error(error.response?.data?.message || "Signup failed.");
+    }
   };
 
   return (
@@ -106,18 +127,37 @@ const Signup = () => {
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <input
                 type="text"
-                name="name"
-                placeholder="Name"
-                value={formData.name}
+                name="fullname"
+                placeholder="Full name"
+                value={formData.fullname}
                 onChange={handleChange}
                 className={`w-full bg-transparent border-2 rounded-lg py-4 pl-12 pr-4 text-white placeholder-gray-500 outline-none transition-all duration-300 ${
-                  errors.name
+                  errors.fullname
                     ? "border-red-500"
                     : "border-gray-800 focus:border-blue-500 hover:border-gray-700"
                 }`}
               />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              {errors.fullname && (
+                <p className="text-red-500 text-sm mt-1">{errors.fullname}</p>
+              )}
+            </div>
+
+            <div className="relative group">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                className={`w-full bg-transparent border-2 rounded-lg py-4 pl-12 pr-4 text-white placeholder-gray-500 outline-none transition-all duration-300 ${
+                  errors.username
+                    ? "border-red-500"
+                    : "border-gray-800 focus:border-blue-500 hover:border-gray-700"
+                }`}
+              />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
               )}
             </div>
 

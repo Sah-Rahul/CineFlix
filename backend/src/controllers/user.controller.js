@@ -102,18 +102,24 @@ export const logout = async (req, res) => {
 
 export const getMyProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;  
 
     const user = await userModel.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
-    return res
-      .status(200)
-      .json({ success: true, user, message: "profile  fetch successfully" });
+    return res.status(200).json({
+      success: true,
+      user,
+      message: "Profile fetched successfully",
+    });
   } catch (error) {
-    console.error("Logout Error:", error);
+    console.error("Get Profile Error:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 export const getOthersUsers = async (req, res) => {
   try {

@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { USER_API_POINT } from "../utils/constant";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux"
+import { getUser } from "../redux/slice/userSlice";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -24,7 +31,7 @@ const Login = () => {
     setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let validationErrors = {};
@@ -44,7 +51,18 @@ const Login = () => {
       return;
     }
 
-    console.log("Login submitted:", formData);
+    try {
+      const { data } = await axios.post(`${USER_API_POINT}/login`, formData, {
+        withCredentials: true,
+      });
+      dispatch(getUser(data?.user))
+      console.log(data?.user?.email)
+      toast.success(`Welcom back ${data.user.fullName}`);
+      navigate("/");
+    } catch (error) {
+      console.error("Login Error:", error);
+      toast.error(error.response?.data?.message || "Login failed.");
+    }
   };
 
   return (
@@ -139,7 +157,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                className="absolute  cursor-pointer right-4 top-1/2 -translate-y-1/2 text-gray-500   transition-colors"
                 tabIndex={-1}
               >
                 {showPassword ? (
@@ -151,15 +169,6 @@ const Login = () => {
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1  ">{errors.password}</p>
               )}
-            </div>
-
-            <div className="text-right">
-              <a
-                href="#"
-                className="text-blue-500 hover:text-blue-400 text-sm font-medium transition-colors"
-              >
-                Forgot password?
-              </a>
             </div>
 
             <button
