@@ -74,9 +74,7 @@ export const login = async (req, res) => {
     return res.status(200).json({
       message: `Welcome back ${user.fullname}`,
       user: {
-        id: user._id,
-        fullName: user.fullname,
-        email: user.email,
+        user,
       },
     });
   } catch (error) {
@@ -102,24 +100,19 @@ export const logout = async (req, res) => {
 
 export const getMyProfile = async (req, res) => {
   try {
-    const id = req.user._id;  
+    const userId = req.params.id;
+    const user = await userModel.findById(userId).select("-password");
 
-    const user = await userModel.findById(id).select("-password");
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({
-      success: true,
-      user,
-      message: "Profile fetched successfully",
-    });
+    res.status(200).json({ user });
   } catch (error) {
-    console.error("Get Profile Error:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 export const getOthersUsers = async (req, res) => {
   try {

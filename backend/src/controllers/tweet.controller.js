@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { tweetModel } from "../models/tweet.model.js";
 import { userModel } from "../models/user.model.js";
 
@@ -51,15 +52,26 @@ export const likeTweet = async (req, res) => {
     const tweet = await tweetModel.findById(id);
     if (!tweet) return res.status(404).json({ message: "Tweet not found" });
 
+    let action = "";
+
     if (tweet.like.includes(userId)) {
       tweet.like.pull(userId);
+      action = "unliked";
     } else {
-      if (tweet.dislike.includes(userId)) tweet.dislike.pull(userId);
+      if (tweet.dislike.includes(userId)) {
+        tweet.dislike.pull(userId);
+      }
       tweet.like.push(userId);
+      action = "liked";
     }
 
     await tweet.save();
-    return res.status(200).json({ message: "Tweet liked successfully", tweet });
+
+    return res.status(200).json({
+      message: "Tweet like status updated successfully",
+      tweet,
+      action,
+    });
   } catch (error) {
     console.error("Like Tweet Error:", error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -127,26 +139,6 @@ export const bookmarkTweet = async (req, res) => {
   }
 };
 
-// export const getAllTweet = async (req, res) => {
-//   try {
-//     const id = req.user._id;
-
-//     const userTweets = await tweetModel.find({ userID: id });
-
-//     if (userTweets.length === 0) {
-//       return res.status(404).json({ message: "This user has no tweets." });
-//     }
-
-//     return res.status(200).json({
-//       message: "User tweets fetched successfully",
-//       tweets: userTweets,
-//     });
-//   } catch (error) {
-//     console.error("Get All Tweets Error:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
 export const getAllTweetsFeed = async (req, res) => {
   try {
     const currentUserId = req.user._id;
@@ -162,7 +154,7 @@ export const getAllTweetsFeed = async (req, res) => {
     const tweets = await tweetModel
       .find({ userID: { $in: usersToFetch } })
       .sort({ createdAt: -1 })
-      .populate("userID", "fullname username");
+      .populate("userID", "fullname email username");
 
     if (tweets.length === 0) {
       return res.status(404).json({ message: "No tweets found." });
@@ -170,7 +162,7 @@ export const getAllTweetsFeed = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Feed tweets fetched successfully",
+      message: " tweets fetched successfully",
       tweets,
     });
   } catch (error) {
@@ -183,21 +175,22 @@ export const getFollowingTweets = async (req, res) => {
   try {
     const currentUserId = req.user._id;
 
-    const currentUser = await userModel
-      .findById(currentUserId)
-      .select("following");
-
+    const currentUser = await userModel.findById(currentUserId).select("following");
     if (!currentUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const followingIds = currentUser.following;
-
-    if (followingIds.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "You are not following anyone", tweets: [] });
+    if (currentUser.following.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "You are not following anyone",
+        tweets: [],
+      });
     }
+
+    const followingIds = currentUser.following.map(
+      (id) => new mongoose.Types.ObjectId(id)
+    );
 
     const tweets = await tweetModel
       .find({ userID: { $in: followingIds } })
@@ -214,3 +207,4 @@ export const getFollowingTweets = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+

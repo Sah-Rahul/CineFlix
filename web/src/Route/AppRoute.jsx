@@ -29,6 +29,10 @@ function AppRoute() {
           element: <Profile />,
         },
         {
+          path: "/profile/:id",
+          element: <Profile />,
+        },
+        {
           path: "/notifications",
           element: <Notifications />,
         },

@@ -11,9 +11,9 @@ userRouter.post('/login', login)
 
 userRouter.get('/logout', logout)
 
-userRouter.get('/my-profile', isAuthenticated, getMyProfile)
-
 userRouter.get('/get-other-user', isAuthenticated, getOthersUsers)
+
+userRouter.get('/:id', isAuthenticated, getMyProfile)
 
 userRouter.put("/follow/:id", isAuthenticated, followUser);  
 

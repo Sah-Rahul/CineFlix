@@ -6,8 +6,7 @@ const Feed = () => {
   return (
     <div className="  w-full">
       <CreatePost />
-      <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet /> <Tweet />{" "}
-      <Tweet /> <Tweet /> <Tweet />
+      <Tweet />  
     </div>
   );
 };

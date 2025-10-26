@@ -4,12 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { USER_API_POINT } from "../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
 import { getUser } from "../redux/slice/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -55,9 +55,8 @@ const Login = () => {
       const { data } = await axios.post(`${USER_API_POINT}/login`, formData, {
         withCredentials: true,
       });
-      dispatch(getUser(data?.user))
-      console.log(data?.user?.email)
-      toast.success(`Welcom back ${data.user.fullName}`);
+      dispatch(getUser(data?.user?.user));
+      toast.success(`Welcome back ${data?.user?.user?.fullname}`);
       navigate("/");
     } catch (error) {
       console.error("Login Error:", error);
