@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import {
   FaHome,
@@ -7,9 +8,31 @@ import {
   FaBookmark,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { USER_API_POINT } from "../utils/constant";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { getOtherUsers, getUser } from "../redux/slice/userSlice";
+import { getAllTweets } from "../redux/slice/tweetSlice";
 
 const LeftSidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    try {
+      const { data } = await axios.get(`${USER_API_POINT}/logout`, {
+        withCredentials: true,
+      });
+      dispatch(getUser(null));
+      dispatch(getOtherUsers(null));
+      dispatch(getAllTweets(null));
+
+      navigate("/login");
+      toast.success("Logout successfull");
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
   return (
     <>
       <div className="flex flex-col justify-between h-screen p-4 border-r border-gray-200 sticky top-0 bg-white">
@@ -42,7 +65,7 @@ const LeftSidebar = () => {
           </button>
         </div>
         <button
-          onClick={() => alert()}
+          onClick={logoutHandler}
           className="flex gap-2 cursor-pointer items-center"
         >
           <FaSignOutAlt className="text-2xl" />

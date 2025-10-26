@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Search, Calendar } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { USER_API_POINT } from "../utils/constant";
+import toast from "react-hot-toast";
+import { updateFollowing } from "../redux/slice/userSlice";
 
 const Profile = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { user: loggedInUser } = useSelector((store) => store.user);
   const [profileUser, setProfileUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +35,34 @@ const Profile = () => {
     };
     fetchUser();
   }, [id, loggedInUser]);
+
+  const followHandlerAndUnfollow = async () => {
+    if (!loggedInUser || !loggedInUser.following) {
+      toast.error("User not loaded yet");
+      return;
+    }
+
+    try {
+      const isFollowing = loggedInUser.following.includes(id);
+      const endpoint = isFollowing
+        ? `${USER_API_POINT}/unfollow/${id}`
+        : `${USER_API_POINT}/follow/${id}`;
+
+      const { data } = await axios.put(endpoint, {}, { withCredentials: true });
+
+      dispatch(updateFollowing(id));
+
+      const actionText = isFollowing ? "unfollowed" : "followed";
+      toast.success(
+        `${loggedInUser.fullname} ${actionText} ${profileUser.fullname}`
+      );
+
+      console.log(data?.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+      console.error("Follow/Unfollow Error:", error);
+    }
+  };
 
   if (loading) return <p className="text-white p-4">Loading profile...</p>;
   if (!profileUser) return <p className="text-white p-4">User not found.</p>;
@@ -70,12 +101,19 @@ const Profile = () => {
           </div>
         </div>
 
-        {(id === loggedInUser?.user?._id || !id) && (
+        {id === loggedInUser?.user?._id || !id ? (
           <div className="absolute bg-gray-900 rounded-full bottom-4 right-4">
             <button className="px-4 py-2 border cursor-pointer border-gray-600 rounded-full font-semibold transition-colors">
               Edit profile
             </button>
           </div>
+        ) : (
+          <button
+            onClick={followHandlerAndUnfollow}
+            className="px-4 ml-[550px] mt-5 bg-black py-2 border cursor-pointer border-gray-600 rounded-full font-semibold transition-colors"
+          >
+            {loggedInUser?.following?.includes(id) ? "Following" : "Follow"}
+          </button>
         )}
       </div>
 

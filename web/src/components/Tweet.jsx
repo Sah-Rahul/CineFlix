@@ -67,7 +67,6 @@ const Tweet = () => {
     <div className="mx-auto bg-white p-4 my-4 border-t-1 border-gray-200 transition">
       {tweets.map((tweet) => (
         <div key={tweet._id} className="mb-6">
-          {/* User Info */}
           <div className="flex items-center text-black space-x-3">
             <img
               src="https://imgs.search.brave.com/VAWLpqOIM1TGZM0-JRDBW-vPwRyJu4mctHh5wQj0cq8/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzFrcmI1STVJNUwu/cG5n"
@@ -87,12 +86,10 @@ const Tweet = () => {
             </div>
           </div>
 
-          {/* Description */}
           <p className="text-black text-sm sm:text-base mt-3">
             {tweet?.description}
           </p>
 
-          {/* Actions */}
           <div className="flex justify-between text-gray-500 text-sm mt-4">
             <button className="flex items-center space-x-1 cursor-pointer hover:text-blue-500">
               <FaRegComment className="text-xl" />

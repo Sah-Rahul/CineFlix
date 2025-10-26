@@ -7,26 +7,31 @@ import { refreshTweets } from "../redux/slice/tweetSlice";
 import { TWEET_API_POINT } from "../utils/constant";
 import { useGetFollowingTweets } from "../hooks/useGetFollowingTweet";
 import { useGetTweet } from "../hooks/useGetTweet";
- 
+
 const CreatePost = () => {
   const dispatch = useDispatch();
   const [text, setText] = useState("");
   const [activeTab, setActiveTab] = useState("forYou");
 
-  // Custom hooks
-  const { tweets: allTweets, fetchTweets: fetchAllTweets, loading: loadingAll } = useGetTweet();
-  const { tweets: followingTweets, fetchTweets: fetchFollowingTweets, loading: loadingFollowing } =
-    useGetFollowingTweets();
+  const {
+    tweets: allTweets,
+    fetchTweets: fetchAllTweets,
+    loading: loadingAll,
+  } = useGetTweet();
+  const {
+    tweets: followingTweets,
+    fetchTweets: fetchFollowingTweets,
+    loading: loadingFollowing,
+  } = useGetFollowingTweets();
 
-  // Final tweets shown
   const [tweets, setTweets] = useState([]);
 
-  // Merge tweets for "For You"
   useEffect(() => {
     if (activeTab === "forYou") {
       const merged = [...allTweets, ...followingTweets];
       const uniqueTweets = merged.filter(
-        (tweet, index, self) => index === self.findIndex((t) => t._id === tweet._id)
+        (tweet, index, self) =>
+          index === self.findIndex((t) => t._id === tweet._id)
       );
       setTweets(uniqueTweets);
     } else {
@@ -34,7 +39,6 @@ const CreatePost = () => {
     }
   }, [activeTab, allTweets, followingTweets]);
 
-  // Create tweet
   const handlePost = async () => {
     if (!text.trim()) return;
     try {
@@ -46,7 +50,7 @@ const CreatePost = () => {
       toast.success("Tweet created successfully!");
       setText("");
       dispatch(refreshTweets());
-      fetchAllTweets(); // update immediately
+      fetchAllTweets();
     } catch (error) {
       console.error("Tweet Error:", error);
       toast.error(error.response?.data?.message || "Tweet failed.");
@@ -58,12 +62,13 @@ const CreatePost = () => {
   return (
     <div className="w-full bg-white">
       <div className="max-w-2xl mx-auto">
-        {/* Tabs */}
         <div className="flex border-b border-gray-200">
           <button
             onClick={() => setActiveTab("forYou")}
             className={`flex-1 py-4 font-semibold ${
-              activeTab === "forYou" ? "text-blue-500 border-b-2 border-blue-500" : "text-gray-500"
+              activeTab === "forYou"
+                ? "text-blue-500 border-b-2 border-blue-500"
+                : "text-gray-500"
             }`}
           >
             For You
@@ -71,14 +76,15 @@ const CreatePost = () => {
           <button
             onClick={() => setActiveTab("following")}
             className={`flex-1 py-4 font-semibold ${
-              activeTab === "following" ? "text-blue-500 border-b-2 border-blue-500" : "text-gray-500"
+              activeTab === "following"
+                ? "text-blue-500 border-b-2 border-blue-500"
+                : "text-gray-500"
             }`}
           >
             Following
           </button>
         </div>
 
-        {/* Create Post */}
         {activeTab === "forYou" && (
           <div className="flex space-x-3 p-4 border-b border-gray-200">
             <img
@@ -109,8 +115,6 @@ const CreatePost = () => {
             </div>
           </div>
         )}
-
-        
       </div>
     </div>
   );

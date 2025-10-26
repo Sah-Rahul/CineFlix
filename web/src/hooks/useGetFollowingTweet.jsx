@@ -12,7 +12,6 @@ export const useGetFollowingTweets = () => {
       const { data } = await axios.get(`${TWEET_API_POINT}/following-tweet`, {
         withCredentials: true,
       });
-      console.log("Following Tweets:", data);
       setTweets(data?.tweets || []);
     } catch (err) {
       console.error("Fetch Following Tweets Error:", err);
